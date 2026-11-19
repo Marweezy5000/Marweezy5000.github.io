@@ -3,31 +3,45 @@
    Change the site's look from here. Every color, font and
    spacing value below is reused across the page, so editing
    one line updates it everywhere.
+
+   Theme: a bright, chunky late-90s 3D-game feel. Big sky,
+   a strip of pixel grass, thick outlines and buttons that
+   press down when you click them.
    ========================================================= */
 :root {
   /* Color palette */
-  --paper:    #EEF1EC; /* page background, a cool sage white */
-  --ink:      #1B2A2F; /* main text, deep blue slate */
-  --river:    #2F5D62; /* headings and links, Mississippi teal */
-  --mist:     #C9D6D3; /* lines and quiet surfaces */
-  --marigold: #E3A72F; /* the one warm accent: buttons, focus, current job */
-  --muted:    #4D5D61; /* secondary text */
+  --sky:        #7CC8FF; /* top of the hero sky */
+  --sky-light:  #D2ECFF; /* bottom of the hero sky */
+  --paper:      #F6FAFF; /* page background below the hero */
+  --ink:        #1F1D4D; /* text and chunky outlines, deep indigo */
+  --blue:       #2356C9; /* section titles and links */
+  --grass:      #3DBB4F; /* pixel grass */
+  --grass-dark: #2A8F3B;
+  --sun:        #FFC83D; /* the warm accent: main buttons, focus, current job */
+  --muted:      #4A4870; /* secondary text */
+  --line:       #C9D6EA; /* quiet lines */
 
   /* Type */
-  --font-display: "Young Serif", Georgia, serif;
+  --font-display: "Lilita One", "Arial Rounded MT Bold", system-ui, sans-serif;
   --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
 
   /* Type scale (each step is about 1.25x the last) */
   --text-sm:   0.9rem;
   --text-base: 1.125rem;
   --text-lg:   1.4rem;
-  --text-xl:   1.75rem;
-  --text-hero: clamp(2.6rem, 6.2vw, 5.25rem);
+  --text-xl:   1.9rem;
+  --text-hero: clamp(2.6rem, 6vw, 4.9rem);
+
+  /* Chunky game-UI details */
+  --outline: 3px solid var(--ink);
+  --drop: 4px 4px 0 var(--ink);  /* hard shadow, no blur */
 
   /* Layout */
   --page-width: 72rem;
   --gutter: clamp(1.25rem, 5vw, 3rem);
-  --section-gap: clamp(4rem, 10vw, 7.5rem);
+  --section-gap: clamp(4rem, 10vw, 7rem);
+  /* Lets full-width bands keep their content lined up with the page */
+  --edge: max(var(--gutter), calc((100% - var(--page-width)) / 2 + var(--gutter)));
 }
 
 /* =========================================================
@@ -50,13 +64,12 @@ body {
 h1, h2, h3 { font-weight: 400; margin: 0; }
 p { margin: 0; }
 
-a { color: var(--river); text-underline-offset: 0.2em; }
+a { color: var(--blue); text-underline-offset: 0.2em; }
 a:hover { color: var(--ink); }
 
 :focus-visible {
-  outline: 3px solid var(--marigold);
+  outline: 3px solid var(--sun);
   outline-offset: 3px;
-  border-radius: 2px;
 }
 
 .skip-link {
@@ -79,12 +92,11 @@ html[data-lang="en"] body [lang="es"],
 html[data-lang="es"] body [lang="en"] { display: none; }
 
 /* =========================================================
-   HEADER
+   HEADER (sits on the sky)
    ========================================================= */
 .site-header {
-  max-width: var(--page-width);
-  margin: 0 auto;
-  padding: 1.5rem var(--gutter);
+  background: var(--sky);
+  padding: 1.25rem var(--edge);
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -102,24 +114,28 @@ html[data-lang="es"] body [lang="en"] { display: none; }
 .site-nav a {
   color: var(--ink);
   text-decoration: none;
+  font-weight: 700;
   font-size: var(--text-sm);
 }
-.site-nav a:hover { text-decoration: underline; }
+.site-nav a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
 
 .lang-switch {
   display: inline-flex;
-  border: 1.5px solid var(--ink);
-  border-radius: 999px;
+  background: var(--paper);
+  border: var(--outline);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--ink);
   padding: 3px;
 }
 .lang-switch button {
   font: inherit;
+  font-weight: 700;
   font-size: var(--text-sm);
   border: 0;
   background: transparent;
   color: var(--ink);
-  padding: 0.3rem 0.85rem;
-  border-radius: 999px;
+  padding: 0.25rem 0.8rem;
+  border-radius: 8px;
   cursor: pointer;
 }
 .lang-switch button[aria-pressed="true"] {
@@ -129,20 +145,67 @@ html[data-lang="es"] body [lang="en"] { display: none; }
 
 /* =========================================================
    HERO
-   The signature moment: the headline is shown in both
-   languages. The active language is large; the other sits
-   beneath it as a quieter echo. Switching languages swaps them.
+   A sky that fades lighter toward a strip of pixel grass.
+   The pixel portrait sits beside the headline. The headline
+   shows in both languages: the active one is big, the other
+   sits beneath it. Switching languages swaps them.
    ========================================================= */
 .hero {
-  max-width: var(--page-width);
-  margin: 0 auto;
-  padding: clamp(3rem, 9vw, 7rem) var(--gutter) var(--section-gap);
+  position: relative;
+  background: linear-gradient(var(--sky), var(--sky-light));
+  padding: clamp(2.5rem, 7vw, 5.5rem) var(--edge) calc(clamp(3.5rem, 8vw, 6rem) + 28px);
+  margin-bottom: var(--section-gap);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+.hero > :not(.avatar) { grid-column: 2; }
+
+/* Pixel grass: a checkered top row over solid green */
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 28px;
+  background:
+    repeating-linear-gradient(90deg, var(--grass) 0 14px, var(--grass-dark) 14px 28px) top / 100% 7px no-repeat,
+    var(--grass);
+  border-top: var(--outline);
+}
+
+/* The portrait: an outlined tile with a hard shadow */
+.avatar {
+  grid-row: span 4;
+  width: clamp(8rem, 15vw, 12rem);
+  aspect-ratio: 1;
+  padding: 0;
+  border: var(--outline);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: var(--drop);
+  overflow: hidden;
+  cursor: pointer;
+}
+.avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated; /* keeps the pixels crisp instead of blurry */
+}
+.avatar.is-hopping { animation: hop 520ms cubic-bezier(.3,.7,.4,1); }
+@keyframes hop {
+  0%   { transform: translateY(0); }
+  35%  { transform: translateY(-26px) rotate(-3deg); }
+  60%  { transform: translateY(0) scale(1.04, .94); }
+  80%  { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
 }
 
 .hero-title {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 /* Both hero lines stay visible, whatever the language */
@@ -150,65 +213,64 @@ html[data-lang] .hero-title .hero-line { display: block; }
 
 .hero-line {
   font-family: var(--font-display);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  line-height: 1.02;
   text-wrap: balance; /* evens out line lengths so no single word is left alone */
   transition: font-size 450ms cubic-bezier(.2,.7,.2,1), color 450ms ease;
 }
 
-/* Active language: big and dark */
+/* Active language: big */
 html[data-lang="en"] .hero-line[lang="en"],
 html[data-lang="es"] .hero-line[lang="es"] {
   order: 1;
   font-size: var(--text-hero);
   color: var(--ink);
-  max-width: 12em;
+  max-width: 13em;
 }
 
-/* The other language: smaller, teal, underneath */
+/* The other language: smaller, blue, underneath */
 html[data-lang="en"] .hero-line[lang="es"],
 html[data-lang="es"] .hero-line[lang="en"] {
   order: 2;
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   line-height: 1.25;
-  color: var(--river);
-  max-width: 24em;
+  color: var(--blue);
+  max-width: 26em;
 }
 
 .hero-intro {
-  margin-top: 2.25rem;
+  margin-top: 1.75rem;
   max-width: 54ch;
   font-size: var(--text-lg);
   line-height: 1.5;
-  color: var(--muted);
 }
 
 .hero-actions {
-  margin-top: 2.25rem;
+  margin-top: 2rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 /* =========================================================
    BUTTONS
+   Outlined, with a hard shadow. They press down when clicked.
    ========================================================= */
 .button {
   display: inline-block;
-  padding: 0.8rem 1.4rem;
-  border-radius: 999px;
+  padding: 0.75rem 1.4rem;
+  border: var(--outline);
+  border-radius: 12px;
+  box-shadow: var(--drop);
   font-weight: 700;
   text-decoration: none;
-  border: 1.5px solid var(--ink);
-}
-.button-primary {
-  background: var(--marigold);
-  border-color: var(--marigold);
   color: var(--ink);
+  background: var(--paper);
+  transition: transform 80ms ease, box-shadow 80ms ease;
 }
-.button-primary:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.button-quiet { color: var(--ink); }
-.button-quiet:hover { background: var(--ink); color: var(--paper); }
+.button:hover { color: var(--ink); background: #fff; }
+.button:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
+.button-primary { background: var(--sun); }
+.button-primary:hover { background: #FFD666; }
 
 /* =========================================================
    SECTIONS
@@ -227,9 +289,8 @@ html[data-lang="es"] .hero-line[lang="en"] {
 .section-title {
   font-family: var(--font-display);
   font-size: var(--text-xl);
-  color: var(--river);
-  line-height: 1.2;
-  padding-top: 0.15rem;
+  color: var(--blue);
+  line-height: 1.15;
 }
 
 /* What I do */
@@ -237,16 +298,17 @@ html[data-lang="es"] .hero-line[lang="en"] {
 .skill dt {
   font-weight: 700;
   font-size: var(--text-lg);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 .skill dd { margin: 0; max-width: 60ch; color: var(--muted); }
 
-/* Experience timeline: a real sequence, so a line connects it */
+/* Experience timeline: a real sequence, so a line connects it.
+   The markers are square, like pixels. */
 .timeline {
   list-style: none;
   margin: 0;
   padding: 0;
-  border-left: 2px solid var(--mist);
+  border-left: 3px solid var(--line);
 }
 .timeline-item {
   position: relative;
@@ -256,18 +318,14 @@ html[data-lang="es"] .hero-line[lang="en"] {
 .timeline-item::before {
   content: "";
   position: absolute;
-  left: -7px;
-  top: 0.45rem;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+  left: -10px;
+  top: 0.4rem;
+  width: 17px;
+  height: 17px;
   background: var(--paper);
-  border: 2px solid var(--river);
+  border: var(--outline);
 }
-.timeline-item.is-current::before {
-  background: var(--marigold);
-  border-color: var(--marigold);
-}
+.timeline-item.is-current::before { background: var(--sun); }
 .timeline-when { font-size: var(--text-sm); color: var(--muted); }
 .timeline-role { font-family: var(--font-body); font-weight: 700; font-size: var(--text-lg); margin-top: 0.15rem; }
 .timeline-org { color: var(--muted); }
@@ -282,14 +340,14 @@ html[data-lang="es"] .hero-line[lang="en"] {
 .contact-body .hero-actions { margin-top: 1.5rem; }
 .contact-email { margin-top: 1rem; font-size: var(--text-sm); color: var(--muted); user-select: all; }
 
-/* Footer */
+/* Footer: the grass comes back at the bottom of the page */
 .site-footer {
-  max-width: var(--page-width);
-  margin: 0 auto;
-  padding: 2rem var(--gutter) 3rem;
-  border-top: 1.5px solid var(--mist);
+  background: var(--grass);
+  border-top: var(--outline);
+  padding: 1.5rem var(--edge) 2rem;
   font-size: var(--text-sm);
-  color: var(--muted);
+  font-weight: 700;
+  color: var(--ink);
 }
 
 /* =========================================================
@@ -299,7 +357,7 @@ html[data-lang="es"] .hero-line[lang="en"] {
    class once you've filled one in.
    ========================================================= */
 .todo {
-  outline: 2px dashed var(--marigold);
+  outline: 2px dashed var(--sun);
   outline-offset: 2px;
   padding: 0 0.2em;
 }
@@ -310,11 +368,15 @@ html[data-lang="es"] .hero-line[lang="en"] {
 @media (max-width: 760px) {
   .site-header { flex-wrap: wrap; gap: 1rem; }
   .site-nav { order: 3; width: 100%; gap: 1.25rem; }
+  .hero { grid-template-columns: 1fr; }
+  .hero > :not(.avatar) { grid-column: 1; }
+  .avatar { grid-row: auto; width: 7.5rem; margin-bottom: 1.75rem; }
   .section { grid-template-columns: 1fr; }
 }
 
 /* Respect people who turn off animations in their device settings */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero-line { transition: none; }
+  .hero-line, .button { transition: none; }
+  .avatar.is-hopping { animation: none; }
 }

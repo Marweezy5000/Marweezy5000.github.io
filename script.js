@@ -26,6 +26,18 @@ buttons.forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.setLang));
 });
 
+// Pixel portrait: hops when clicked.
+// Removing and re-adding the class restarts the animation on every click.
+const avatar = document.querySelector(".avatar");
+if (avatar) {
+  avatar.addEventListener("click", () => {
+    avatar.classList.remove("is-hopping");
+    void avatar.offsetWidth; // forces the browser to notice the class was removed
+    avatar.classList.add("is-hopping");
+  });
+  avatar.addEventListener("animationend", () => avatar.classList.remove("is-hopping"));
+}
+
 // On load: use the saved choice, or Spanish if the visitor's browser prefers it
 let saved = null;
 try { saved = localStorage.getItem("lang"); } catch (e) {}
