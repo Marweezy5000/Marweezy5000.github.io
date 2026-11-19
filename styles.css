@@ -84,14 +84,6 @@ a:hover { color: var(--ink); }
 .skip-link:focus { top: 1rem; }
 
 /* =========================================================
-   LANGUAGE SWITCHING
-   <html data-lang="en"> hides every Spanish span, and
-   <html data-lang="es"> hides every English span.
-   ========================================================= */
-html[data-lang="en"] body [lang="es"],
-html[data-lang="es"] body [lang="en"] { display: none; }
-
-/* =========================================================
    HEADER (sits on the sky)
    ========================================================= */
 .site-header {
@@ -119,36 +111,10 @@ html[data-lang="es"] body [lang="en"] { display: none; }
 }
 .site-nav a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
 
-.lang-switch {
-  display: inline-flex;
-  background: var(--paper);
-  border: var(--outline);
-  border-radius: 12px;
-  box-shadow: 3px 3px 0 var(--ink);
-  padding: 3px;
-}
-.lang-switch button {
-  font: inherit;
-  font-weight: 700;
-  font-size: var(--text-sm);
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  padding: 0.25rem 0.8rem;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.lang-switch button[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--paper);
-}
-
 /* =========================================================
    HERO
    A sky that fades lighter toward a strip of pixel grass.
-   The pixel portrait sits beside the headline. The headline
-   shows in both languages: the active one is big, the other
-   sits beneath it. Switching languages swaps them.
+   The pixel portrait sits beside the headline.
    ========================================================= */
 .hero {
   position: relative;
@@ -203,38 +169,11 @@ html[data-lang="es"] body [lang="en"] { display: none; }
 }
 
 .hero-title {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* Both hero lines stay visible, whatever the language */
-html[data-lang] .hero-title .hero-line { display: block; }
-
-.hero-line {
   font-family: var(--font-display);
-  line-height: 1.02;
-  text-wrap: balance; /* evens out line lengths so no single word is left alone */
-  transition: font-size 450ms cubic-bezier(.2,.7,.2,1), color 450ms ease;
-}
-
-/* Active language: big */
-html[data-lang="en"] .hero-line[lang="en"],
-html[data-lang="es"] .hero-line[lang="es"] {
-  order: 1;
   font-size: var(--text-hero);
-  color: var(--ink);
+  line-height: 1.02;
   max-width: 13em;
-}
-
-/* The other language: smaller, blue, underneath */
-html[data-lang="en"] .hero-line[lang="es"],
-html[data-lang="es"] .hero-line[lang="en"] {
-  order: 2;
-  font-size: var(--text-lg);
-  line-height: 1.25;
-  color: var(--blue);
-  max-width: 26em;
+  text-wrap: balance; /* evens out line lengths so no single word is left alone */
 }
 
 .hero-intro {
@@ -329,6 +268,9 @@ html[data-lang="es"] .hero-line[lang="en"] {
 .timeline-when { font-size: var(--text-sm); color: var(--muted); }
 .timeline-role { font-family: var(--font-body); font-weight: 700; font-size: var(--text-lg); margin-top: 0.15rem; }
 .timeline-org { color: var(--muted); }
+.timeline-detail { margin-top: 0.5rem; max-width: 60ch; }
+.timeline-earlier { margin: 0.5rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+.timeline-earlier li { margin-bottom: 0.2rem; }
 
 /* Now */
 .now { display: grid; gap: 1.25rem; max-width: 60ch; }
@@ -377,6 +319,6 @@ html[data-lang="es"] .hero-line[lang="en"] {
 /* Respect people who turn off animations in their device settings */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero-line, .button { transition: none; }
+  .button { transition: none; }
   .avatar.is-hopping { animation: none; }
 }
