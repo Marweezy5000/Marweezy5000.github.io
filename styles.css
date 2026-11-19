@@ -280,6 +280,7 @@ html[data-lang="es"] .hero-line[lang="en"] {
 /* Contact */
 .contact-body { max-width: 60ch; }
 .contact-body .hero-actions { margin-top: 1.5rem; }
+.contact-email { margin-top: 1rem; font-size: var(--text-sm); color: var(--muted); user-select: all; }
 
 /* Footer */
 .site-footer {
