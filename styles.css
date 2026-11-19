@@ -232,6 +232,62 @@ a:hover { color: var(--ink); }
   line-height: 1.15;
 }
 
+/* Building with AI */
+.ai-body { max-width: 62ch; }
+.ai-lead { font-size: var(--text-lg); line-height: 1.5; }
+.sub-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  margin: 2.5rem 0 1rem;
+}
+
+/* Focus areas: square pixel bullets */
+.focus { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.9rem; }
+.focus li { position: relative; padding-left: 1.75rem; color: var(--muted); }
+.focus li strong { color: var(--ink); }
+.focus li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 12px;
+  height: 12px;
+  background: var(--sun);
+  border: 2px solid var(--ink);
+}
+
+/* Build log: each project is an outlined card, newest first */
+.log { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
+.log-entry {
+  background: #fff;
+  border: var(--outline);
+  border-radius: 16px;
+  box-shadow: var(--drop);
+  padding: 1.25rem 1.5rem 1.4rem;
+}
+.log-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.status {
+  background: var(--grass);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 0 0.5rem;
+  font-weight: 700;
+}
+.log-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-xl);
+  margin: 0.5rem 0 0.4rem;
+}
+.log-next { margin-top: 1.25rem; font-size: var(--text-sm); color: var(--muted); }
+
 /* What I do */
 .skills { margin: 0; display: grid; gap: 2.25rem; }
 .skill dt {
