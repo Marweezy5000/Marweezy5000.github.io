@@ -1,0 +1,319 @@
+/* =========================================================
+   DESIGN TOKENS
+   Change the site's look from here. Every color, font and
+   spacing value below is reused across the page, so editing
+   one line updates it everywhere.
+   ========================================================= */
+:root {
+  /* Color palette */
+  --paper:    #EEF1EC; /* page background, a cool sage white */
+  --ink:      #1B2A2F; /* main text, deep blue slate */
+  --river:    #2F5D62; /* headings and links, Mississippi teal */
+  --mist:     #C9D6D3; /* lines and quiet surfaces */
+  --marigold: #E3A72F; /* the one warm accent: buttons, focus, current job */
+  --muted:    #4D5D61; /* secondary text */
+
+  /* Type */
+  --font-display: "Young Serif", Georgia, serif;
+  --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
+
+  /* Type scale (each step is about 1.25x the last) */
+  --text-sm:   0.9rem;
+  --text-base: 1.125rem;
+  --text-lg:   1.4rem;
+  --text-xl:   1.75rem;
+  --text-hero: clamp(2.6rem, 6.2vw, 5.25rem);
+
+  /* Layout */
+  --page-width: 72rem;
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+  --section-gap: clamp(4rem, 10vw, 7.5rem);
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-weight: 400; margin: 0; }
+p { margin: 0; }
+
+a { color: var(--river); text-underline-offset: 0.2em; }
+a:hover { color: var(--ink); }
+
+:focus-visible {
+  outline: 3px solid var(--marigold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -4rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.5rem 1rem;
+  z-index: 10;
+}
+.skip-link:focus { top: 1rem; }
+
+/* =========================================================
+   LANGUAGE SWITCHING
+   <html data-lang="en"> hides every Spanish span, and
+   <html data-lang="es"> hides every English span.
+   ========================================================= */
+html[data-lang="en"] body [lang="es"],
+html[data-lang="es"] body [lang="en"] { display: none; }
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.site-header {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 1.5rem var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--ink);
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.site-nav { display: flex; gap: 1.75rem; }
+.site-nav a {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: var(--text-sm);
+}
+.site-nav a:hover { text-decoration: underline; }
+
+.lang-switch {
+  display: inline-flex;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 3px;
+}
+.lang-switch button {
+  font: inherit;
+  font-size: var(--text-sm);
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.lang-switch button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* =========================================================
+   HERO
+   The signature moment: the headline is shown in both
+   languages. The active language is large; the other sits
+   beneath it as a quieter echo. Switching languages swaps them.
+   ========================================================= */
+.hero {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: clamp(3rem, 9vw, 7rem) var(--gutter) var(--section-gap);
+}
+
+.hero-title {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Both hero lines stay visible, whatever the language */
+html[data-lang] .hero-title .hero-line { display: block; }
+
+.hero-line {
+  font-family: var(--font-display);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance; /* evens out line lengths so no single word is left alone */
+  transition: font-size 450ms cubic-bezier(.2,.7,.2,1), color 450ms ease;
+}
+
+/* Active language: big and dark */
+html[data-lang="en"] .hero-line[lang="en"],
+html[data-lang="es"] .hero-line[lang="es"] {
+  order: 1;
+  font-size: var(--text-hero);
+  color: var(--ink);
+  max-width: 12em;
+}
+
+/* The other language: smaller, teal, underneath */
+html[data-lang="en"] .hero-line[lang="es"],
+html[data-lang="es"] .hero-line[lang="en"] {
+  order: 2;
+  font-size: var(--text-xl);
+  line-height: 1.25;
+  color: var(--river);
+  max-width: 24em;
+}
+
+.hero-intro {
+  margin-top: 2.25rem;
+  max-width: 54ch;
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.hero-actions {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.button {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1.5px solid var(--ink);
+}
+.button-primary {
+  background: var(--marigold);
+  border-color: var(--marigold);
+  color: var(--ink);
+}
+.button-primary:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.button-quiet { color: var(--ink); }
+.button-quiet:hover { background: var(--ink); color: var(--paper); }
+
+/* =========================================================
+   SECTIONS
+   Two columns on wide screens: title on the left, content on
+   the right. One column on phones.
+   ========================================================= */
+.section {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter) var(--section-gap);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+  gap: 1.5rem 4rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--river);
+  line-height: 1.2;
+  padding-top: 0.15rem;
+}
+
+/* What I do */
+.skills { margin: 0; display: grid; gap: 2.25rem; }
+.skill dt {
+  font-weight: 700;
+  font-size: var(--text-lg);
+  margin-bottom: 0.4rem;
+}
+.skill dd { margin: 0; max-width: 60ch; color: var(--muted); }
+
+/* Experience timeline: a real sequence, so a line connects it */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 2px solid var(--mist);
+}
+.timeline-item {
+  position: relative;
+  padding: 0 0 2.5rem 2rem;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 0.45rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--river);
+}
+.timeline-item.is-current::before {
+  background: var(--marigold);
+  border-color: var(--marigold);
+}
+.timeline-when { font-size: var(--text-sm); color: var(--muted); }
+.timeline-role { font-family: var(--font-body); font-weight: 700; font-size: var(--text-lg); margin-top: 0.15rem; }
+.timeline-org { color: var(--muted); }
+
+/* Now */
+.now { display: grid; gap: 1.25rem; max-width: 60ch; }
+.now-lead { font-size: var(--text-lg); line-height: 1.5; }
+.now-next { color: var(--muted); }
+
+/* Contact */
+.contact-body { max-width: 60ch; }
+.contact-body .hero-actions { margin-top: 1.5rem; }
+
+/* Footer */
+.site-footer {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 2rem var(--gutter) 3rem;
+  border-top: 1.5px solid var(--mist);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* =========================================================
+   PLACEHOLDERS
+   Anything with class="todo" still needs your real info.
+   The dashed outline makes them easy to spot. Delete the
+   class once you've filled one in.
+   ========================================================= */
+.todo {
+  outline: 2px dashed var(--marigold);
+  outline-offset: 2px;
+  padding: 0 0.2em;
+}
+
+/* =========================================================
+   SMALL SCREENS
+   ========================================================= */
+@media (max-width: 760px) {
+  .site-header { flex-wrap: wrap; gap: 1rem; }
+  .site-nav { order: 3; width: 100%; gap: 1.25rem; }
+  .section { grid-template-columns: 1fr; }
+}
+
+/* Respect people who turn off animations in their device settings */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-line { transition: none; }
+}
